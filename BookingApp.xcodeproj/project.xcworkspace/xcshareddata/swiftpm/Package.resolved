@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "taglayoutview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yotsu12/TagLayoutView",
+      "state" : {
+        "branch" : "master",
+        "revision" : "815deadaca2b65edb03ec2fe25d0ce300d2eb7b3"
+      }
+    }
+  ],
+  "version" : 2
+}

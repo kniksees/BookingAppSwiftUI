@@ -11,11 +11,22 @@ struct CustomTextField: View {
     var placeHolder: String
     @State var text = ""
     @State var isTapped = false
+    @ObservedObject var bookingViewModel: BookingViewModel
+    //@State var isValid = true
+    var validator: (String) -> Bool
+    var id: Int
+    //var validateFiedl: (String) -> Bool
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundStyle(Color(UIColor(red: 246 / 255, green: 246 / 255, blue: 249 / 255, alpha: 1)))
-                .frame(width: 343, height: 52)
+            if bookingViewModel.contactInformationValidator[id] {
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color(UIColor(red: 246 / 255, green: 246 / 255, blue: 249 / 255, alpha: 1)))
+                    .frame(width: 343, height: 52)
+            } else {
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color(UIColor(red: 235 / 255, green: 87 / 255, blue: 87 / 255, alpha: 0.15)))
+                    .frame(width: 343, height: 52)
+            }
             TextField("", text: $text) {status in
                 if status {
                     withAnimation(.easeOut) {
@@ -23,6 +34,7 @@ struct CustomTextField: View {
                     }
                 }
             } onCommit: {
+                bookingViewModel.contactInformationValidator[id] = validator(text)
                 if text == "" {
                     withAnimation(.easeOut) {
                         isTapped = false
@@ -38,13 +50,17 @@ struct CustomTextField: View {
                 , alignment: .leading)
             .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
         }
+//        .onAppear() {
+//            bookingViewModel.contactInformationValidator[id] = validator(text)
+//        }
     }
 }
 
 struct CustomerInfoBlockView: View {
-    @State var telephoneNumber = ""
-    @State var email = ""
+//    @State var telephoneNumber = ""
+//    @State var email = ""
     @State var isTapped = false
+    var bookingViewModel: BookingViewModel
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
@@ -60,8 +76,8 @@ struct CustomerInfoBlockView: View {
                 }
                 .padding(EdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0))
                 
-                CustomTextField(placeHolder: "Номер телефона")
-                CustomTextField(placeHolder: "Почта")
+                CustomTextField(placeHolder: "Номер телефона", bookingViewModel: bookingViewModel, validator: bookingViewModel.checkPhoneNumver(phoneNumber:), id: 0)
+                CustomTextField(placeHolder: "Почта", bookingViewModel: bookingViewModel, validator: bookingViewModel.checkEmail(email:), id: 1)
                 
                 HStack {
                     Text("Эти данные никому не передаются. После оплаты мы вышли чек на указанный вами номер и почту")

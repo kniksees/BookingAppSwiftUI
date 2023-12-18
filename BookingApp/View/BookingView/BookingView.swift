@@ -9,12 +9,7 @@ import SwiftUI
 
 struct BookingView: View {
     var link: String
-    
-    @State var countOfToorist = 1
-    @State var bookingInfo: BookingNetworkManager.Welcome? = nil
-    @State var toorists = ["Первый турист", "Второй турсит"]
-    var tooristsLabels = ["Первый турист", "Второй турсит", "Третий турсит", "Четвертый турсит", "Пятый турсит",
-                          "Шестой турсит", "Седьмой турсит", "Восьмой турсит", "Девятый турсит", "Десятый турсит"]
+    @ObservedObject var bookingViewModel = BookingViewModel()
     @Binding var path: [idLink]
     
     var body: some View {
@@ -27,22 +22,22 @@ struct BookingView: View {
                 
                 ScrollView {
                     Spacer(minLength: 90)
-                    if bookingInfo != nil {
-                        HotelBlockView(rating: bookingInfo!.horating,
-                                       ratingName: bookingInfo!.ratingName,
-                                       hotelName: bookingInfo!.hotelName,
-                                       hotelLocation: bookingInfo!.hotelAdress)
-                        BookingInfoView(departure: bookingInfo!.departure,
-                                        arrivalСountry:  bookingInfo!.arrivalCountry,
-                                        tourDateStart:  bookingInfo!.tourDateStart,
-                                        tourDateStop:  bookingInfo!.tourDateStop,
-                                        numberOfNights:  bookingInfo!.numberOfNights,
-                                        hotelName:  bookingInfo!.hotelName,
-                                        room:  bookingInfo!.room,
-                                        nutrition:  bookingInfo!.nutrition)
-                        CustomerInfoBlockView()
-                        ForEach(toorists, id: \.self) {toorist in
-                            TooristInformationBlockVIew(tooristNumber: toorist)
+                    if bookingViewModel.bookingInfo != nil {
+                        HotelBlockView(rating:  bookingViewModel.bookingInfo!.horating,
+                                       ratingName: bookingViewModel.bookingInfo!.ratingName,
+                                       hotelName: bookingViewModel.bookingInfo!.hotelName,
+                                       hotelLocation: bookingViewModel.bookingInfo!.hotelAdress)
+                        BookingInfoView(departure: bookingViewModel.bookingInfo!.departure,
+                                        arrivalСountry:  bookingViewModel.bookingInfo!.arrivalCountry,
+                                        tourDateStart:  bookingViewModel.bookingInfo!.tourDateStart,
+                                        tourDateStop:  bookingViewModel.bookingInfo!.tourDateStop,
+                                        numberOfNights:  bookingViewModel.bookingInfo!.numberOfNights,
+                                        hotelName:  bookingViewModel.bookingInfo!.hotelName,
+                                        room:  bookingViewModel.bookingInfo!.room,
+                                        nutrition:  bookingViewModel.bookingInfo!.nutrition)
+                        CustomerInfoBlockView(bookingViewModel: bookingViewModel)
+                        ForEach(bookingViewModel.toorists, id: \.self) {toorist in
+                            TooristInformationBlockVIew(tooristNumber: toorist.tooristNumberName, tooristId: toorist.tooristNumber, bookingViewModel: bookingViewModel)
                         }
                         
                         ZStack {
@@ -55,11 +50,7 @@ struct BookingView: View {
                                     .font(.system(size: 22).weight(.medium))
                                 Spacer()
                                 Button(action: {
-                                    if toorists.count < tooristsLabels.count {
-                                        toorists.append(tooristsLabels[toorists.count])
-                                    } else {
-                                        toorists.append("Турист \(toorists.count)")
-                                    }
+                                    bookingViewModel.addTorist()
                                 }, label: {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 6)
@@ -75,10 +66,10 @@ struct BookingView: View {
                             .frame(width: 343)
                             .padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0))
                         }
-                        if bookingInfo != nil {
-                            AmountBlockView(tourPrice: bookingInfo!.tourPrice,
-                                            fuelCharge: bookingInfo!.fuelCharge,
-                                            serviceCharge: bookingInfo!.serviceCharge)
+                        if bookingViewModel.bookingInfo != nil {
+                            AmountBlockView(tourPrice: bookingViewModel.bookingInfo!.tourPrice,
+                                            fuelCharge: bookingViewModel.bookingInfo!.fuelCharge,
+                                            serviceCharge: bookingViewModel.bookingInfo!.serviceCharge)
                         }
                         
                         
@@ -103,33 +94,72 @@ struct BookingView: View {
                         .frame(width: UIScreen.main.bounds.size.width, height: 110)
                         .ignoresSafeArea()
                         .foregroundStyle(Color(UIColor(.white)))
-                    NavigationLink(value: 4) {
-                        NavigationLink {
-                            PaidView(path: $path)
-                                .toolbarRole(.editor)
-                        } label: {
+//                    NavigationLink(value: 4) {
+//                        NavigationLink {
+//                            PaidView(path: $path)
+//                                .toolbarRole(.editor)
+//                        } label: {
+//                            ZStack {
+//                                Rectangle()
+//                                    .frame(width: 343, height: 48)
+//                                    .ignoresSafeArea()
+//                                    .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
+//                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+//                                if  bookingViewModel.bookingInfo != nil {
+//                                    Text("Опалтить \( bookingViewModel.bookingInfo!.tourPrice +  bookingViewModel.bookingInfo!.fuelCharge +  bookingViewModel.bookingInfo!.serviceCharge) ₽")
+//                                        .foregroundStyle(.white)
+//                                        .font(.system(size: 16).weight(.medium))
+//                                }
+//                                
+//                                
+//                            }
+//                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 0))
+//                        }
+//                    }
+                    if bookingViewModel.isRadyForPay() {
+                        NavigationLink(value: idLink(id: 4, link: "")) {
                             ZStack {
                                 Rectangle()
                                     .frame(width: 343, height: 48)
                                     .ignoresSafeArea()
                                     .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
                                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                                if bookingInfo != nil {
-                                    Text("Опалтить \(bookingInfo!.tourPrice + bookingInfo!.fuelCharge + bookingInfo!.serviceCharge) ₽")
+                                if  bookingViewModel.bookingInfo != nil {
+                                    Text("Опалтить \((bookingViewModel.bookingInfo!.tourPrice +  bookingViewModel.bookingInfo!.fuelCharge +  bookingViewModel.bookingInfo!.serviceCharge) * bookingViewModel.getCountOfPeople()) ₽")
+                                        .foregroundStyle(.white)
+                                        .font(.system(size: 16).weight(.medium))
+                                }
+                            }
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 0))
+                        }
+                    } else {
+                        Button(action: {
+                            bookingViewModel.validateForPay()
+                            print("aa")
+                            print(bookingViewModel.contactInformationValidator)
+                        }, label: {
+                            ZStack {
+                                Rectangle()
+                                    .frame(width: 343, height: 48)
+                                    .ignoresSafeArea()
+                                    .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                if  bookingViewModel.bookingInfo != nil {
+                                    Text("Опалтить \((bookingViewModel.bookingInfo!.tourPrice +  bookingViewModel.bookingInfo!.fuelCharge +  bookingViewModel.bookingInfo!.serviceCharge) * bookingViewModel.getCountOfPeople()) ₽")
                                         .foregroundStyle(.white)
                                         .font(.system(size: 16).weight(.medium))
                                 }
                                 
-                                
                             }
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 0))
-                        }
+                        })
                     }
+
                 }
             }
         }.onAppear() {
             Task {
-                bookingInfo = await BookingNetworkManager.getHotelRooms(link: link)
+                await bookingViewModel.initBookingInfo(link: link)
             }
         }
         .toolbarBackground(.hidden, for: .navigationBar) 

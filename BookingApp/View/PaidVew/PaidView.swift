@@ -46,7 +46,7 @@ struct PaidView: View {
                         .ignoresSafeArea()
                         .foregroundStyle(Color(UIColor(.white)))
                     Text("Заказ оплачен")
-                        .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
                         .font(.system(size: 18).weight(.medium))
                 }
                 Spacer()

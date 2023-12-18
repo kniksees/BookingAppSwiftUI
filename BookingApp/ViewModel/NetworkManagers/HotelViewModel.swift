@@ -7,7 +7,7 @@
 
 import Foundation
 
-class HotelNetworkManager: ObservableObject {
+class HotelViewModel: ObservableObject {
     
     @Published var hotel: Hotel? = nil
     
@@ -72,7 +72,6 @@ class HotelNetworkManager: ObservableObject {
         } catch {
             return nil
         }
-
     }
     
     struct Welcome: Codable {

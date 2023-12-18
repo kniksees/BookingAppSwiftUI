@@ -104,13 +104,12 @@ struct ButtonsCard: View {
                 })
             }
         }
-        
     }
 }
 
 
 struct AboutHotelCard: View {
-    var hotelInfo: HotelNetworkManager.Welcome?
+    var hotelInfo: Hotel
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
@@ -128,9 +127,8 @@ struct AboutHotelCard: View {
                                     bottom: 0,
                                     trailing: 0))
                 
-                
                 TagLayoutView(
-                    hotelInfo?.aboutTheHotel.peculiarities ?? [],
+                    hotelInfo.peculiarities,
                     tagFont: UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.thin),
                     padding: 0,
                     parentWidth: 327) { tag in
@@ -143,8 +141,7 @@ struct AboutHotelCard: View {
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                     }
                 
-                
-                Text(hotelInfo?.aboutTheHotel.description ?? "")
+                Text(hotelInfo.description)
                     .font(.system(size: 16).weight(.regular))
                     .padding(EdgeInsets(top: 5, leading: 0, bottom: 8, trailing: 0))
                 ButtonsCard()

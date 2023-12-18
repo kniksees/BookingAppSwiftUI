@@ -18,8 +18,6 @@ struct RatingView: View {
             Text(text)
                 .font(.system(size: 16).weight(.medium))
                 .foregroundStyle(Color(UIColor(red: 255 / 255, green: 168 / 255, blue: 0 / 255, alpha: 1)))
-            
-            
         }
     }
 }

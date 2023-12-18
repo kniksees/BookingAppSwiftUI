@@ -7,27 +7,33 @@
 
 import Foundation
 
-class HotelRoomNetworkManager: ObservableObject {
+class HotelRoomsViewModel: ObservableObject {
     
     @Published var rooms = [HotelRoom]()
     
     func initHotelRooms(link: String) {
-        Task {
-            let roomsInfo = await getHotelRooms(link: link)
-            for i in roomsInfo {
-                rooms.append(HotelRoom(id: i.id,
-                                       name: i.name,
-                                       price: i.price,
-                                       pricePer: i.pricePer,
-                                       peculiarities: i.peculiarities,
-                                       imageUrls: i.imageUrls,
-                                       imageData: []))
-            }
-            
-            for i in 0..<rooms.count {
-                for link in rooms[i].imageUrls {
-                    if let data = await getDataByURL(apiURL: link) {
-                        rooms[i].imageData.append(ImageIdentifible(data: data))
+        if rooms.isEmpty {
+            Task {
+                let roomsInfo = await getHotelRooms(link: link)
+                await MainActor.run {
+                    for i in roomsInfo {
+                        rooms.append(HotelRoom(id: i.id,
+                                               name: i.name,
+                                               price: i.price,
+                                               pricePer: i.pricePer,
+                                               peculiarities: i.peculiarities,
+                                               imageUrls: i.imageUrls,
+                                               imageData: []))
+                    }
+                }
+                
+                for i in 0..<rooms.count {
+                    for link in rooms[i].imageUrls {
+                        if let data = await getDataByURL(apiURL: link) {
+                            await MainActor.run {
+                                rooms[i].imageData.append(ImageIdentifible(data: data))
+                            }
+                        }
                     }
                 }
             }
@@ -35,20 +41,32 @@ class HotelRoomNetworkManager: ObservableObject {
     }
     
     func getHotelRooms(link: String) async -> [Room] {
-        let url = URL(string: link)!
-        let (data, _) = try! await URLSession.shared.data(from: url)
-        return try! JSONDecoder().decode(Welcome.self, from: data).rooms
+        guard let url = URL(string: link) else {
+            return []
+        }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            return try! JSONDecoder().decode(Welcome.self, from: data).rooms
+        } catch {
+            return []
+        }
     }
     
     func getDataByURL(apiURL: String?) async -> Data? {
         guard let apiURL else {
             return nil
         }
-        let url = URL(string: apiURL)!
-        let (data, _) = try! await URLSession.shared.data(from: url)
-        return data
+        guard let url = URL(string: apiURL) else {
+            return nil
+        }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            return data
+        } catch {
+            return nil
+        }
     }
-
+    
     struct Welcome: Codable {
         let rooms: [Room]
     }

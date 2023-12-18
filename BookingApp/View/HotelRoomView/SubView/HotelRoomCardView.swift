@@ -8,10 +8,12 @@
 import SwiftUI
 import TagLayoutView
 
+
+
 struct HotelRoomCard: View {
-    var room: HotelRoomNetworkManager.Room
+    var room: HotelRoom
     @Binding var path: [idLink]
-    @State var images: [Data?] = []
+
     var body: some View {
         VStack {
             ZStack {
@@ -20,14 +22,27 @@ struct HotelRoomCard: View {
                     .ignoresSafeArea()
                     .foregroundStyle(Color(UIColor(.white)))
                 VStack {
-                    Image(uiImage: UIImage(data: (images.first ?? Data()) ?? Data()) ?? UIImage())
-                        .resizable()
-                        .frame(width: 343, height: 257)
-                        .cornerRadius(15)
-                        .padding(EdgeInsets(top: 20,
-                                            leading: 0,
-                                            bottom: 5,
-                                            trailing: 0))
+                        TabView {
+                            ForEach(room.imageData) { image in
+                                if let image = UIImage(data: image.data) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .frame(width: 343, height: 257)
+                                        .cornerRadius(15)
+                                        .padding(EdgeInsets(top: 20,
+                                                            leading: 0,
+                                                            bottom: 5,
+                                                            trailing: 0))
+                                }
+                            }
+                        }
+                        .frame(width: 343, height: 280)
+                        .tabViewStyle(PageTabViewStyle())
+                        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                  
+         
+
+
                     HStack {
                         HStack {
                             Text(room.name)
@@ -116,11 +131,6 @@ struct HotelRoomCard: View {
                 .frame(width: 343)
             }
             
-        }
-        .onAppear() {
-            Task {
-                images.append(await HotelRoomNetworkManager.getDataByURL(apiURL: room.imageUrls[0]))
-            }
         }
     }
 }

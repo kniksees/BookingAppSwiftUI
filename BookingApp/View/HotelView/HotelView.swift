@@ -7,21 +7,10 @@
 
 import SwiftUI
 
-struct idLink: Hashable {
-    static func == (lhs: idLink, rhs: idLink) -> Bool {
-        lhs.id == rhs.id
-    }
-    var id: Int
-    var link: String
-}
-
 struct HotelView: View {
-    @State var hotelInfo: HotelNetworkManager.Welcome? = nil
-    @State var image: Data? = nil
     @State var path = [idLink]()
-
+    @ObservedObject var hotelViewModel = HotelViewModel()
     var body: some View {
-    
         
         NavigationStack(path: $path) {
             
@@ -33,8 +22,10 @@ struct HotelView: View {
                 VStack {
                     Spacer(minLength: 40)
                     ScrollView {
-                        MainCard(hotelInfo: hotelInfo, image: image)
-                        AboutHotelCard(hotelInfo: hotelInfo)
+                        if hotelViewModel.hotel != nil {
+                            MainCard(hotelInfo: hotelViewModel.hotel!, images: hotelViewModel.hotel!.imageData)
+                            AboutHotelCard(hotelInfo: hotelViewModel.hotel!)
+                        } 
                         Spacer(minLength: 105)
                     }
                 }
@@ -70,8 +61,11 @@ struct HotelView: View {
                         }
                         .navigationDestination(for: idLink.self) { pathValue in
                             if pathValue == idLink(id: 2, link: "") {
-                                HotelRoomView(hotelName: hotelInfo?.name ?? "", link: pathValue.link, path: $path)
-                                    .toolbarRole(.editor)
+                                if hotelViewModel.hotel != nil {
+                                    HotelRoomView(hotelName: hotelViewModel.hotel!.name, link: pathValue.link, path: $path)
+                                        .toolbarRole(.editor)
+                                }
+
                             } else if pathValue == idLink(id: 3, link: "") {
                                 BookingView(link: pathValue.link , path: $path)
                                     .toolbarRole(.editor)
@@ -92,9 +86,7 @@ struct HotelView: View {
         .preferredColorScheme(.light)
         .onAppear {
             Task {
-                //hotelInfo = await HotelNetworkManager.getHotel()
-                hotelInfo = await HotelNetworkManager.getHotel(link: "https://run.mocky.io/v3/d144777c-a67f-4e35-867a-cacc3b827473")
-                image = await HotelNetworkManager.getDataByURL(apiURL: hotelInfo?.imageUrls[0])
+                await hotelViewModel.initHotel(link: "https://run.mocky.io/v3/d144777c-a67f-4e35-867a-cacc3b827473")
             }
         }
     }

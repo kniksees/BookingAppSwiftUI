@@ -7,9 +7,66 @@
 
 import SwiftUI
 
+struct CustomTextFieldWithId: View {
+    var placeHolder: String
+    @State var text = ""
+    @State var isTapped = false
+    @ObservedObject var bookingViewModel: BookingViewModel
+    @State var isValid = true
+    var validator: (Int, String) -> Bool
+    var id: Int
+    var fieldType: Int
+    
+    var body: some View {
+        ZStack {
+            if isValid {
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color(UIColor(red: 246 / 255, green: 246 / 255, blue: 249 / 255, alpha: 1)))
+                    .frame(width: 343, height: 52)
+            } else {
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(Color(UIColor(red: 235 / 255, green: 87 / 255, blue: 87 / 255, alpha: 0.15)))
+                    .frame(width: 343, height: 52)
+            }
+            TextField("", text: $text) {status in
+                if status {
+                    withAnimation(.easeOut) {
+                        isTapped = true
+                    }
+                }
+            } onCommit: {
+                isValid = validator(id, text)
+                if text == "" {
+                    withAnimation(.easeOut) {
+                        isTapped = false
+                    }
+                }
+            }
+            .padding(EdgeInsets(top: isTapped ? 15 : 0, leading: 0, bottom: 0, trailing: 0))
+            .background(
+                Text(placeHolder)
+                    .scaleEffect(isTapped ? 0.75 : 1)
+                    .foregroundStyle(Color(UIColor(red: 169 / 255, green: 171 / 255, blue: 183 / 255, alpha: 1)))
+                    .offset(x: isTapped ? -Double(placeHolder.count) * 1.2 : 0, y: isTapped ? -15 : 0)
+                , alignment: .leading)
+            .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
+        }
+        .onAppear() {
+            text = bookingViewModel.toorists[id].values[fieldType]
+            isValid = validator(id, text)
+            if !text.isEmpty {
+                isTapped = true
+            }
+        }
+    }
+}
+
+
 struct TooristInformationBlockVIew: View {
     var tooristNumber: String
-    @State var toogle = false
+    var tooristId: Int
+    //@State var toogle = false
+    @ObservedObject var bookingViewModel: BookingViewModel
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
@@ -17,14 +74,14 @@ struct TooristInformationBlockVIew: View {
                 .ignoresSafeArea()
                 .foregroundStyle(Color(UIColor(.white)))
             VStack {
-                if toogle {
+                if bookingViewModel.toggle[tooristId] {
                     VStack {
                         HStack {
                             Text(tooristNumber)
                                 .font(.system(size: 22).weight(.medium))
                             Spacer()
                             Button(action: {
-                                toogle.toggle()
+                                bookingViewModel.toggle[tooristId].toggle()
                             }, label: {
                                 ZStack {
                                     Image("ImageArrowBlue")
@@ -39,12 +96,36 @@ struct TooristInformationBlockVIew: View {
                                 }
                             })
                         }
-                        CustomTextField(placeHolder: "Имя")
-                        CustomTextField(placeHolder: "Фамилия")
-                        CustomTextField(placeHolder: "Дата рождения")
-                        CustomTextField(placeHolder: "Гражданство")
-                        CustomTextField(placeHolder: "Номер загранпаспорта")
-                        CustomTextField(placeHolder: "Срок действия загранпаспорта")
+                        CustomTextFieldWithId(placeHolder: "Имя",
+                                              bookingViewModel: bookingViewModel,
+                                              validator: bookingViewModel.checkFirstName(id:name:),
+                                              id: tooristId,
+                                              fieldType: 0)
+                        CustomTextFieldWithId(placeHolder: "Фамилия",
+                                              bookingViewModel: bookingViewModel,
+                                              validator: bookingViewModel.checkSurname(id:surname:),
+                                              id: tooristId,
+                                              fieldType: 1)
+                        CustomTextFieldWithId(placeHolder: "Дата рождения",
+                                              bookingViewModel: bookingViewModel,
+                                              validator: bookingViewModel.checkBirthday(id:birthday:),
+                                              id: tooristId,
+                                              fieldType: 2)
+                        CustomTextFieldWithId(placeHolder: "Гражданство",
+                                              bookingViewModel: bookingViewModel,
+                                              validator: bookingViewModel.checkСitizenship(id:citizenship:),
+                                              id: tooristId,
+                                              fieldType: 3)
+                        CustomTextFieldWithId(placeHolder: "Номер загранпаспорта",
+                                              bookingViewModel: bookingViewModel,
+                                              validator: bookingViewModel.checkPassportNumber(id:passportNumber:),
+                                              id: tooristId,
+                                              fieldType: 4)
+                        CustomTextFieldWithId(placeHolder: "Срок действия загранпаспорта",
+                                              bookingViewModel: bookingViewModel,
+                                              validator: bookingViewModel.checkPassportValidityPeriod(id:passportValidityPeriod:),
+                                              id: tooristId,
+                                              fieldType: 5)
                     }
                     .padding(EdgeInsets(top: 10, leading: 0, bottom: 20, trailing: 0))
                 } else {
@@ -53,7 +134,7 @@ struct TooristInformationBlockVIew: View {
                             .font(.system(size: 22).weight(.medium))
                         Spacer()
                         Button(action: {
-                            toogle.toggle()
+                            bookingViewModel.toggle[tooristId].toggle()
                         }, label: {
                             ZStack {
                                 Image("ImageArrowBlue")

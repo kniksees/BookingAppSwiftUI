@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MainCard: View {
-    var hotelInfo: HotelNetworkManager.Welcome?
-    var image: Data?
+    var hotelInfo: Hotel
+    var images: [ImageIdentifible]
     var body: some View {
         ZStack {
             
@@ -18,17 +18,27 @@ struct MainCard: View {
                 .ignoresSafeArea()
                 .foregroundStyle(Color(UIColor(.white)))
             VStack {
-                Image(uiImage: UIImage(data: image ?? Data()) ?? UIImage())
-                    .resizable()
-                    .frame(width: 343, height: 257)
-                    .cornerRadius(15)
-                    .padding(EdgeInsets(top: 45,
-                                        leading: 0,
-                                        bottom: 5,
-                                        trailing: 0))
+                TabView {
+                    ForEach(images) { image in
+                        if let image = UIImage(data: image.data) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .frame(width: 343, height: 257)
+                                .cornerRadius(15)
+                                .padding(EdgeInsets(top: 20,
+                                                    leading: 0,
+                                                    bottom: 5,
+                                                    trailing: 0))
+                        }
+                    }
+                }
+                .frame(width: 343, height: 280)
+                .tabViewStyle(PageTabViewStyle())
+                .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                 
                 HStack {
-                    RatingView(text: "★ \(hotelInfo?.rating ?? 0) \(hotelInfo?.ratingName ?? "")")
+                    RatingView(text: "★ \(hotelInfo.rating) \(hotelInfo.ratingName)")
                     Spacer()
                 }
                 .frame(width: 343)
@@ -38,7 +48,7 @@ struct MainCard: View {
                                     trailing: 0))
                 
                 HStack {
-                    Text(hotelInfo?.name ?? "")
+                    Text(hotelInfo.name)
                         .font(.system(size: 22).weight(.medium))
                     Spacer()
                 }
@@ -49,7 +59,7 @@ struct MainCard: View {
                                     trailing: 0))
                 
                 HStack {
-                    Text(hotelInfo?.adress ?? "")
+                    Text(hotelInfo.adress)
                         .font(.system(size: 14))
                         .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
                     Spacer()
@@ -61,11 +71,11 @@ struct MainCard: View {
                                     trailing: 0))
                 
                 HStack {
-                    Text("от \(hotelInfo?.minimalPrice ?? 0) ₽")
+                    Text("от \(hotelInfo.minimalPrice) ₽")
                         .font(.system(size: 30))
                         .bold()
                     Spacer()
-                    Text(hotelInfo?.priceForIt.lowercased() ?? "")
+                    Text(hotelInfo.priceForIt.lowercased())
                         .font(.system(size: 16).weight(.regular))
                         .padding(EdgeInsets(top: 8,
                                             leading: 0,

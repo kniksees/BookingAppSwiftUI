@@ -10,7 +10,7 @@ import SwiftUI
 struct HotelRoomView: View {
     var hotelName: String
     var link: String
-    @State var hotelRooms: [HotelRoomNetworkManager.Room]  = []
+    @ObservedObject var hotelRoomsViewModel = HotelRoomsViewModel()
     @Binding var path: [idLink]
     
     var body: some View {
@@ -23,7 +23,7 @@ struct HotelRoomView: View {
             VStack {
                 ScrollView {
                     Spacer(minLength: 75)
-                    ForEach(hotelRooms) { room in
+                    ForEach(hotelRoomsViewModel.rooms) { room in
                         HotelRoomCard(room: room, path: $path)
                     }
                     Spacer(minLength: 105)
@@ -45,7 +45,8 @@ struct HotelRoomView: View {
         }
         .onAppear {
             Task {
-                hotelRooms = await HotelRoomNetworkManager.getHotelRooms(link: link)
+                //hotelRooms = await HotelRoomNetworkManager.getHotelRooms(link: link)
+                hotelRoomsViewModel.initHotelRooms(link: link)
             }
         }
         .toolbarBackground(.hidden, for: .navigationBar)
@@ -58,6 +59,7 @@ struct HotelRoomView: View {
         @State var path = [idLink]()
         var body: some View {
             HotelRoomView(hotelName: "Hotel", link: "https://run.mocky.io/v3/8b532701-709e-4194-a41c-1a903af00195", path: $path)
+           
         }
     }
     return Preview()

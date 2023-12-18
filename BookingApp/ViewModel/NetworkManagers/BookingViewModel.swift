@@ -8,13 +8,38 @@
 import Foundation
 
 
-class BookingNetworkManager {
+class BookingNetworkManager: ObservableObject {
     
-    static func getHotelRooms(link: String) async -> Welcome {
+    @Published var bookingInfo: BookingInfo? = nil
+    
+    func initBookingInfo(link: String) async {
+        Task {
+            var info = await getHotelRooms(link: link)
+            bookingInfo = BookingInfo(id: info.id,
+                                      hotelName: info.hotelName,
+                                      hotelAdress: info.hotelAdress,
+                                      horating: info.horating,
+                                      ratingName: info.ratingName,
+                                      departure: info.departure,
+                                      arrivalCountry: info.arrivalCountry,
+                                      tourDateStart: info.tourDateStart,
+                                      tourDateStop: info.tourDateStart,
+                                      numberOfNights: info.numberOfNights,
+                                      room: info.room,
+                                      nutrition: info.nutrition,
+                                      tourPrice: info.tourPrice,
+                                      fuelCharge: info.fuelCharge,
+                                      serviceCharge: info.serviceCharge)
+        }
+    }
+    
+    
+    func getHotelRooms(link: String) async -> Welcome {
         let link = URL(string: link )!
         let (data, _) = try! await URLSession.shared.data(from: link)
         return try! JSONDecoder().decode(Welcome.self, from: data)
     }
+
 
     struct Welcome: Codable {
         let id: Int

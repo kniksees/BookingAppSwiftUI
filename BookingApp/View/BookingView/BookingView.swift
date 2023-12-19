@@ -124,7 +124,7 @@ struct BookingView: View {
                                     .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
                                     .clipShape(RoundedRectangle(cornerRadius: 15))
                                 if  bookingViewModel.bookingInfo != nil {
-                                    Text("Опалтить \((bookingViewModel.bookingInfo!.tourPrice +  bookingViewModel.bookingInfo!.fuelCharge +  bookingViewModel.bookingInfo!.serviceCharge) * bookingViewModel.getCountOfPeople()) ₽")
+                                    Text("Оплатить \((bookingViewModel.bookingInfo!.tourPrice +  bookingViewModel.bookingInfo!.fuelCharge +  bookingViewModel.bookingInfo!.serviceCharge) * bookingViewModel.getCountOfPeople()) ₽")
                                         .foregroundStyle(.white)
                                         .font(.system(size: 16).weight(.medium))
                                 }

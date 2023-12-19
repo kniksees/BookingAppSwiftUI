@@ -12,7 +12,7 @@ import TagLayoutView
 
 struct HotelRoomCard: View {
     
- @Binding var path: [idLink]
+    @Binding var path: [idLink]
     @ObservedObject var hotelRoomsViewModel: HotelRoomsViewModel
     var id: Int
     var body: some View {
@@ -130,7 +130,6 @@ struct HotelRoomCard: View {
                 }
                 .frame(width: 343)
             }
-            
         }
     }
 }

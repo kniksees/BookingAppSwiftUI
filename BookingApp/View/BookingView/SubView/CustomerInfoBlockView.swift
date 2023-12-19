@@ -110,16 +110,6 @@ struct CustomTextFieldPhoneNumber: View {
                 }
             }
             
-            
-            
-            
-            
-            //            .onKeyPress(action: { _ in
-            //                var textArr = Array(text)
-            //                textArr[textArr.firstIndex(of: "*") ?? 0] = textArr.removeLast()
-            //                text = String(text)
-            //                return
-            //            })
             .padding(EdgeInsets(top: isTapped ? 15 : 0, leading: 0, bottom: 0, trailing: 0))
             .background(
                 Text(placeHolder)
@@ -150,7 +140,6 @@ struct CustomerInfoBlockView: View {
                 }
                 .padding(EdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0))
                 
-                //CustomTextField(placeHolder: "Номер телефона", bookingViewModel: bookingViewModel, validator: bookingViewModel.checkPhoneNumver(phoneNumber:), id: 0)
                 CustomTextFieldPhoneNumber(placeHolder: "Номер телефона", bookingViewModel: bookingViewModel, validator: bookingViewModel.checkPhoneNumver(phoneNumber:), id: 0)
                 CustomTextField(placeHolder: "Почта", bookingViewModel: bookingViewModel, validator: bookingViewModel.checkEmail(email:), id: 1)
 

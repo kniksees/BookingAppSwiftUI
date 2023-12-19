@@ -80,7 +80,6 @@ struct HotelView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            
         }
         .accentColor(.black)
         .preferredColorScheme(.light)

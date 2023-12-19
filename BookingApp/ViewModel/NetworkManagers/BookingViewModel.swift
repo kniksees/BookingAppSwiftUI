@@ -97,10 +97,6 @@ class BookingViewModel: ObservableObject {
     
     func checkEmail(email: String) -> Bool {
         self.email = email
-//        if email.isEmpty {
-//            emailIsValid = true
-//            return true
-//        }
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         if emailPredicate.evaluate(with: email) {
@@ -108,7 +104,6 @@ class BookingViewModel: ObservableObject {
         } else {
             return false
         }
-        //return emailIsValid
     }
     
     
@@ -118,38 +113,18 @@ class BookingViewModel: ObservableObject {
     @Published var phoneNumberIsValid = true
     func checkPhoneNumver(phoneNumber: String) -> Bool {
         self.phoneNumber = phoneNumber
-//        if phoneNumber.filter({$0.isNumber}).count == 10 || phoneNumber.isEmpty {
-//            phoneNumberIsValid = true
-//        } else {
-//            phoneNumberIsValid = false
-//        }
         if phoneNumber.filter({$0.isNumber}).count == 11 {
             return true
         } else {
             return false
         }
-//        return phoneNumberIsValid
     }
     
-    
-//    func addTorist() {
-//        if tooristsCount == toorists.count {
-//            if toorists.count < 10 {
-//                //toorists.append(tooristsLabels[tooristsCount])
-//                toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: tooristsLabels[tooristsCount]))
-//            } else {
-//                toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: "Турист \(tooristsCount + 1)"))
-//            }
-//            toggle.append(false)
-//        }
-//        tooristsCount += 1
-//        print(toggle)
-//    }
+
     
     func addTorist() {
 
             if toorists.count < 10 {
-                //toorists.append(tooristsLabels[tooristsCount])
                 toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: tooristsLabels[tooristsCount]))
             } else {
                 toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: "Турист \(tooristsCount + 1)"))

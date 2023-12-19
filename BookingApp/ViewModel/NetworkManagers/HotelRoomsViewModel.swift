@@ -90,6 +90,5 @@ class HotelRoomsViewModel: ObservableObject {
         }
     }
     
-    //@Published var selectedTab = [0, 0]
     @Published var selectedTab = [Int]()
 }

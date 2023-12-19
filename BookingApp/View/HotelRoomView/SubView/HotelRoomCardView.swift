@@ -11,9 +11,8 @@ import TagLayoutView
 
 
 struct HotelRoomCard: View {
-    //var room: HotelRoom
     
-    @Binding var path: [idLink]
+ @Binding var path: [idLink]
     @ObservedObject var hotelRoomsViewModel: HotelRoomsViewModel
     var id: Int
     var body: some View {
@@ -43,9 +42,6 @@ struct HotelRoomCard: View {
                     .frame(width: 343, height: 280)
                     .overlay(CustomHotelRoomIndexView(hotelRoomsViewModel: hotelRoomsViewModel, id: id))
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                  
-         
-
 
                     HStack {
                         HStack {

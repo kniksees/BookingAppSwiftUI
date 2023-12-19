@@ -11,6 +11,7 @@ struct AmountBlockView: View {
     var tourPrice: Int
     var fuelCharge: Int
     var serviceCharge: Int
+    var multiply: Int
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
@@ -46,7 +47,7 @@ struct AmountBlockView: View {
                     Text("К оплате")
                         .foregroundStyle(Color(UIColor(red: 130 / 255, green: 135 / 255, blue: 150 / 255, alpha: 1)))
                     Spacer()
-                    Text("\(tourPrice + fuelCharge + serviceCharge) ₽")
+                    Text("\((tourPrice + fuelCharge + serviceCharge) * multiply) ₽")
                         .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
                 }
                 .padding(EdgeInsets(top: 5, leading: 0, bottom: 20, trailing: 0))

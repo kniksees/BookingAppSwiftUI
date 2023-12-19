@@ -23,7 +23,7 @@ struct HotelView: View {
                     Spacer(minLength: 40)
                     ScrollView {
                         if hotelViewModel.hotel != nil {
-                            MainCard(hotelInfo: hotelViewModel.hotel!, images: hotelViewModel.hotel!.imageData)
+                            MainCard(hotelInfo: hotelViewModel.hotel!, images: hotelViewModel.hotel!.imageData, hotelViewModel: hotelViewModel)
                             AboutHotelCard(hotelInfo: hotelViewModel.hotel!)
                         } 
                         Spacer(minLength: 105)

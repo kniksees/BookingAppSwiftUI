@@ -69,7 +69,8 @@ struct BookingView: View {
                         if bookingViewModel.bookingInfo != nil {
                             AmountBlockView(tourPrice: bookingViewModel.bookingInfo!.tourPrice,
                                             fuelCharge: bookingViewModel.bookingInfo!.fuelCharge,
-                                            serviceCharge: bookingViewModel.bookingInfo!.serviceCharge)
+                                            serviceCharge: bookingViewModel.bookingInfo!.serviceCharge,
+                                            multiply: bookingViewModel.getCountOfPeople())
                         }
                         
                         
@@ -94,28 +95,6 @@ struct BookingView: View {
                         .frame(width: UIScreen.main.bounds.size.width, height: 110)
                         .ignoresSafeArea()
                         .foregroundStyle(Color(UIColor(.white)))
-//                    NavigationLink(value: 4) {
-//                        NavigationLink {
-//                            PaidView(path: $path)
-//                                .toolbarRole(.editor)
-//                        } label: {
-//                            ZStack {
-//                                Rectangle()
-//                                    .frame(width: 343, height: 48)
-//                                    .ignoresSafeArea()
-//                                    .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
-//                                    .clipShape(RoundedRectangle(cornerRadius: 15))
-//                                if  bookingViewModel.bookingInfo != nil {
-//                                    Text("Опалтить \( bookingViewModel.bookingInfo!.tourPrice +  bookingViewModel.bookingInfo!.fuelCharge +  bookingViewModel.bookingInfo!.serviceCharge) ₽")
-//                                        .foregroundStyle(.white)
-//                                        .font(.system(size: 16).weight(.medium))
-//                                }
-//                                
-//                                
-//                            }
-//                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 35, trailing: 0))
-//                        }
-//                    }
                     if bookingViewModel.isRadyForPay() {
                         NavigationLink(value: idLink(id: 4, link: "")) {
                             ZStack {

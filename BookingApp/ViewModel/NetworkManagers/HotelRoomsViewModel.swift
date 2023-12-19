@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class HotelRoomsViewModel: ObservableObject {
     
@@ -29,8 +30,9 @@ class HotelRoomsViewModel: ObservableObject {
                 
                 for i in 0..<rooms.count {
                     for link in rooms[i].imageUrls {
-                        if let data = await getDataByURL(apiURL: link) {
+                        if let data = await getDataByURL(apiURL: link), (UIImage(data: data) != nil){
                             await MainActor.run {
+                                selectedTab.append(0)
                                 rooms[i].imageData.append(ImageIdentifible(data: data))
                             }
                         }
@@ -87,4 +89,7 @@ class HotelRoomsViewModel: ObservableObject {
             case imageUrls = "image_urls"
         }
     }
+    
+    //@Published var selectedTab = [0, 0]
+    @Published var selectedTab = [Int]()
 }

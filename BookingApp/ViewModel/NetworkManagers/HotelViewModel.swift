@@ -31,7 +31,7 @@ class HotelViewModel: ObservableObject {
                               peculiarities: hotelInfo.aboutTheHotel.peculiarities)
             }
            
-            
+
             for i in hotelInfo.imageUrls {
                 if let data = await getDataByURL(apiURL: i)  {
                     if hotel != nil {
@@ -100,5 +100,6 @@ class HotelViewModel: ObservableObject {
         let peculiarities: [String]
     }
 
+    @Published var selectedTab = 0
 }
 

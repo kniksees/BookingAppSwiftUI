@@ -123,7 +123,7 @@ class BookingViewModel: ObservableObject {
 //        } else {
 //            phoneNumberIsValid = false
 //        }
-        if phoneNumber.filter({$0.isNumber}).count == 10 {
+        if phoneNumber.filter({$0.isNumber}).count == 11 {
             return true
         } else {
             return false
@@ -132,8 +132,22 @@ class BookingViewModel: ObservableObject {
     }
     
     
+//    func addTorist() {
+//        if tooristsCount == toorists.count {
+//            if toorists.count < 10 {
+//                //toorists.append(tooristsLabels[tooristsCount])
+//                toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: tooristsLabels[tooristsCount]))
+//            } else {
+//                toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: "Турист \(tooristsCount + 1)"))
+//            }
+//            toggle.append(false)
+//        }
+//        tooristsCount += 1
+//        print(toggle)
+//    }
+    
     func addTorist() {
-        if tooristsCount == toorists.count {
+
             if toorists.count < 10 {
                 //toorists.append(tooristsLabels[tooristsCount])
                 toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: tooristsLabels[tooristsCount]))
@@ -141,14 +155,14 @@ class BookingViewModel: ObservableObject {
                 toorists.append(TooristValidator(tooristNumber: tooristsCount, tooristNumberName: "Турист \(tooristsCount + 1)"))
             }
             toggle.append(false)
-        }
+        
         tooristsCount += 1
         print(toggle)
     }
     
     @Published var toorists = [TooristValidator(tooristNumber: 0, tooristNumberName: "Первый турист"),
                                TooristValidator(tooristNumber: 1, tooristNumberName: "Второй турсит")]
-    var tooristsCount = 1
+    var tooristsCount = 2
     let tooristsLabels = ["Первый турист", "Второй турсит", "Третий турсит", "Четвертый турсит", "Пятый турсит",
                           "Шестой турсит", "Седьмой турсит", "Восьмой турсит", "Девятый турсит", "Десятый турсит"]
     
@@ -255,3 +269,4 @@ class BookingViewModel: ObservableObject {
         return count
     }
 }
+

@@ -12,6 +12,7 @@ struct ImageIdentifible: Identifiable {
     var data: Data
 }
 
+
 struct idLink: Hashable {
     static func == (lhs: idLink, rhs: idLink) -> Bool {
         lhs.id == rhs.id

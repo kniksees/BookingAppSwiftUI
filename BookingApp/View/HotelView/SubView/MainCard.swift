@@ -10,6 +10,7 @@ import SwiftUI
 struct MainCard: View {
     var hotelInfo: Hotel
     var images: [ImageIdentifible]
+    @ObservedObject var hotelViewModel: HotelViewModel
     var body: some View {
         ZStack {
             
@@ -18,9 +19,9 @@ struct MainCard: View {
                 .ignoresSafeArea()
                 .foregroundStyle(Color(UIColor(.white)))
             VStack {
-                TabView {
-                    ForEach(images) { image in
-                        if let image = UIImage(data: image.data) {
+                TabView(selection: $hotelViewModel.selectedTab) {
+                    ForEach(0..<images.count, id: \.self) { i in
+                        if let image = UIImage(data: images[i].data) {
                             Image(uiImage: image)
                                 .resizable()
                                 .frame(width: 343, height: 257)
@@ -33,9 +34,9 @@ struct MainCard: View {
                     }
                 }
                 .frame(width: 343, height: 280)
-                .tabViewStyle(PageTabViewStyle())
-                .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
                 .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
+                .overlay(CustomHotelIndexView(hotelViewModel: hotelViewModel))
+                .tabViewStyle(.page(indexDisplayMode: .never))
                 
                 HStack {
                     RatingView(text: "★ \(hotelInfo.rating) \(hotelInfo.ratingName)")

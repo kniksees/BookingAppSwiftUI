@@ -70,26 +70,4 @@ struct BookingInfoView: View {
 }
 
 
-//struct BookingInfoView: View {
-//    let departure: String
-//    let arrivalСountry: String
-//    let tourDateStart: String
-//    let tourDateStop: String
-//    let numberOfNights: Int
-//    let hotelName: String
-//    let room: String
-//    let nutrition: String
-//    var body: some View {
-//        ZStack {
-//            RoundedRectangle(cornerRadius: 16)
-//                .frame(width: UIScreen.main.bounds.size.width)
-//                .ignoresSafeArea()
-//                .foregroundStyle(Color(UIColor(.white)))
-//            VStack {
-//                
-//
-//            }
-//            .frame(width: 343)
-//        }
-//    }
-//}
+

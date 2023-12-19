@@ -11,9 +11,11 @@ import TagLayoutView
 
 
 struct HotelRoomCard: View {
-    var room: HotelRoom
+    //var room: HotelRoom
+    
     @Binding var path: [idLink]
-
+    @ObservedObject var hotelRoomsViewModel: HotelRoomsViewModel
+    var id: Int
     var body: some View {
         VStack {
             ZStack {
@@ -22,30 +24,32 @@ struct HotelRoomCard: View {
                     .ignoresSafeArea()
                     .foregroundStyle(Color(UIColor(.white)))
                 VStack {
-                        TabView {
-                            ForEach(room.imageData) { image in
-                                if let image = UIImage(data: image.data) {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .frame(width: 343, height: 257)
-                                        .cornerRadius(15)
-                                        .padding(EdgeInsets(top: 20,
-                                                            leading: 0,
-                                                            bottom: 5,
-                                                            trailing: 0))
-                                }
+                    
+                    TabView(selection: $hotelRoomsViewModel.selectedTab[id]) {
+                        
+                        ForEach(0..<hotelRoomsViewModel.rooms[id].imageData.count, id: \.self) { i in
+                            if let image = UIImage(data: hotelRoomsViewModel.rooms[id].imageData[i].data) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .frame(width: 343, height: 257)
+                                    .cornerRadius(15)
+                                    .padding(EdgeInsets(top: 20,
+                                                        leading: 0,
+                                                        bottom: 5,
+                                                        trailing: 0))
                             }
                         }
-                        .frame(width: 343, height: 280)
-                        .tabViewStyle(PageTabViewStyle())
-                        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                    }
+                    .frame(width: 343, height: 280)
+                    .overlay(CustomHotelRoomIndexView(hotelRoomsViewModel: hotelRoomsViewModel, id: id))
+                    .tabViewStyle(.page(indexDisplayMode: .never))
                   
          
 
 
                     HStack {
                         HStack {
-                            Text(room.name)
+                            Text(hotelRoomsViewModel.rooms[id].name)
                                 .font(.system(size: 22).weight(.medium))
                             Spacer()
                         }
@@ -58,7 +62,7 @@ struct HotelRoomCard: View {
                     }
                     
                     TagLayoutView(
-                        room.peculiarities ,
+                        hotelRoomsViewModel.rooms[id].peculiarities,
                         tagFont: UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.thin),
                         padding: 0,
                         parentWidth: 250) { tag in
@@ -100,9 +104,9 @@ struct HotelRoomCard: View {
                         }
                     })
                     HStack {
-                        Text("\(room.price) ₽")
+                        Text("\(hotelRoomsViewModel.rooms[id].price) ₽")
                             .font(.system(size: 30).weight(.semibold))
-                        Text(room.pricePer)
+                        Text(hotelRoomsViewModel.rooms[id].pricePer)
                             .font(.system(size: 16).weight(.regular))
                             .padding(EdgeInsets(top: 8,
                                                 leading: 0,

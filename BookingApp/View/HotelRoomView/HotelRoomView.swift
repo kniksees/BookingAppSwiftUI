@@ -23,8 +23,10 @@ struct HotelRoomView: View {
             VStack {
                 ScrollView {
                     Spacer(minLength: 75)
-                    ForEach(hotelRoomsViewModel.rooms) { room in
-                        HotelRoomCard(room: room, path: $path)
+                    if hotelRoomsViewModel.rooms.count <= hotelRoomsViewModel.selectedTab.count {
+                        ForEach(hotelRoomsViewModel.rooms) { room in
+                            HotelRoomCard(path: $path, hotelRoomsViewModel: hotelRoomsViewModel, id: room.id - 1)
+                        }
                     }
                     Spacer(minLength: 105)
                 }
@@ -45,9 +47,9 @@ struct HotelRoomView: View {
         }
         .onAppear {
             Task {
-                //hotelRooms = await HotelRoomNetworkManager.getHotelRooms(link: link)
                 hotelRoomsViewModel.initHotelRooms(link: link)
             }
+            
         }
         .toolbarBackground(.hidden, for: .navigationBar)
     }
@@ -59,6 +61,7 @@ struct HotelRoomView: View {
         @State var path = [idLink]()
         var body: some View {
             HotelRoomView(hotelName: "Hotel", link: "https://run.mocky.io/v3/8b532701-709e-4194-a41c-1a903af00195", path: $path)
+            //HotelRoomView(hotelName: "Hotel", link: "https://run.mocky.io/v3/634ae004-6fa0-49eb-833f-7da7a358a636", path: $path)
            
         }
     }

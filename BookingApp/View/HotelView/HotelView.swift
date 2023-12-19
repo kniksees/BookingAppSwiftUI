@@ -52,7 +52,7 @@ struct HotelView: View {
                                     .ignoresSafeArea()
                                     .foregroundStyle(Color(UIColor(red: 13 / 255, green: 114 / 255, blue: 255 / 255, alpha: 1)))
                                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                                Text("К выбору номер")
+                                Text("К выбору номера")
                                     .foregroundStyle(.white)
                                     .font(.system(size: 16).weight(.medium))
                                 

@@ -138,8 +138,8 @@ class BookingViewModel: ObservableObject {
     @Published var toorists = [TooristValidator(tooristNumber: 0, tooristNumberName: "Первый турист"),
                                TooristValidator(tooristNumber: 1, tooristNumberName: "Второй турсит")]
     var tooristsCount = 2
-    let tooristsLabels = ["Первый турист", "Второй турсит", "Третий турсит", "Четвертый турсит", "Пятый турсит",
-                          "Шестой турсит", "Седьмой турсит", "Восьмой турсит", "Девятый турсит", "Десятый турсит"]
+    let tooristsLabels = ["Первый турист", "Второй турист", "Третий турист", "Четвертый турист", "Пятый турист",
+                          "Шестой турист", "Седьмой турист", "Восьмой турист", "Девятый турист", "Десятый турист"]
     
     @Published var toggle = [false, false]
     
